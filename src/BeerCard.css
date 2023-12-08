@@ -1,0 +1,10 @@
+/* src/BeerCard.css */
+
+.beer-card {
+    margin-bottom: 20px;
+  }
+  
+  .beer-card img {
+    border-radius: 8px;
+  }
+  

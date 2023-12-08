@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState, useEffect } from 'react';
+import BeerCard from './BeerCard';
+import './App.css'; // Import your CSS file
 
-function App() {
+
+
+const App = () => {
+  const [beers, setBeers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    // Fetch data from the Punk API
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://api.punkapi.com/v2/beers');
+        const data = await response.json();
+        setBeers(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filter beers based on the search term
+  const filteredBeers = beers.filter((beer) =>
+    beer.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Beer Explorer</h1>
+      <input
+        type="text"
+        placeholder="Search for beers..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+      <div className="beer-container">
+        {filteredBeers.map((beer) => (
+          <BeerCard key={beer.id} beer={beer} />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
